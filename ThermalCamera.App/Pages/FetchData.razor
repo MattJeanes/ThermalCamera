@@ -1,15 +1,13 @@
 ﻿@page "/fetchdata"
 
 @using ThermalCamera.App.Data
-@inject UsbConnectionService UsbConnectionService
+@inject WeatherForecastService ForecastService
 
-<h1>USB Connection Service</h1>
+<h1>Weather forecast</h1>
 
-<p>This table shows all connected USB devices.</p>
+<p>This component demonstrates fetching data from a service.</p>
 
-<button class="btn btn-primary" @onclick="Refresh">Refresh</button>
-
-@if (usbConnectionData == null)
+@if (forecasts == null)
 {
 	<p><em>Loading...</em></p>
 }
@@ -18,14 +16,20 @@ else
 	<table class="table">
 		<thead>
 			<tr>
+				<th>Date</th>
+				<th>Temp. (C)</th>
+				<th>Temp. (F)</th>
 				<th>Summary</th>
 			</tr>
 		</thead>
 		<tbody>
-			@foreach (var data in usbConnectionData)
+			@foreach (var forecast in forecasts)
 			{
 				<tr>
-					<td>@data.Summary</td>
+					<td>@forecast.Date.ToShortDateString()</td>
+					<td>@forecast.TemperatureC</td>
+					<td>@forecast.TemperatureF</td>
+					<td>@forecast.Summary</td>
 				</tr>
 			}
 		</tbody>
@@ -33,15 +37,10 @@ else
 }
 
 @code {
-	private List<UsbConnectionData> usbConnectionData;
+	private WeatherForecast[] forecasts;
 
 	protected override async Task OnInitializedAsync()
 	{
-		await Refresh();
-	}
-
-	private async Task Refresh()
-	{
-		usbConnectionData = await UsbConnectionService.GetData();
+		forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
 	}
 }
