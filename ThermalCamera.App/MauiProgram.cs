@@ -22,7 +22,7 @@ namespace ThermalCamera.App
 				});
 
 			builder.Services.AddBlazorWebView();
-			builder.Services.AddSingleton<WeatherForecastService>();
+			builder.Services.AddSingleton<UsbConnectionService>();
 
 			return builder.Build();
 		}
