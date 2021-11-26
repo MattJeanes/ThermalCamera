@@ -9,6 +9,8 @@
 		<SingleProject>true</SingleProject>
 		<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
 		<EnableDefaultCssItems>false</EnableDefaultCssItems>
+		<LangVersion>latest</LangVersion>
+		<Nullable>enable</Nullable>
 
 		<!-- Display name -->
 		<ApplicationTitle>ThermalCamera.App</ApplicationTitle>
@@ -65,4 +67,5 @@
 		<Compile Remove="**\**\*.Windows.cs" />
 		<None Include="**\**\*.Windows.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
 	</ItemGroup>
+
 </Project>

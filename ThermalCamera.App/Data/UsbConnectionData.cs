@@ -1,9 +1,8 @@
-using System;
-
 namespace ThermalCamera.App.Data
 {
-	public class UsbConnectionData
-	{
-		public string Summary { get; set; }
-	}
+    public struct UsbConnectionData
+    {
+        public string Id;
+        public string Summary;
+    }
 }

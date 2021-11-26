@@ -3,6 +3,7 @@ using Android.Hardware.Usb;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ThermalCamera.App.Data.Interfaces;
 
 namespace ThermalCamera.App.Data
 {
@@ -14,6 +15,7 @@ namespace ThermalCamera.App.Data
             var accessories = usbService.GetAccessoryList();
             var usbConnectionData = accessories?.Select(x => new UsbConnectionData
             {
+                Id = x.Serial,
                 Summary = x.Description
             }).ToList() ?? new List<UsbConnectionData>();
 
@@ -21,11 +23,24 @@ namespace ThermalCamera.App.Data
             {
                 usbConnectionData.Add(new UsbConnectionData
                 {
+                    Id = "N/A",
                     Summary = "No devices"
                 });
             }
 
             return Task.FromResult(usbConnectionData);
+        }
+
+        public async Task<IDeviceStream> Connect(UsbConnectionData data)
+        {
+            return new DeviceStream();
+            // placeholder
+        }
+
+        public IDeviceStream? GetStream()
+        {
+            return null;
+            // placeholder
         }
     }
 }
