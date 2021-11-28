@@ -29,7 +29,7 @@ namespace ThermalCamera.App.Data
                 {
                     break;
                 }
-                await CheckStream(_cancellationTokenSource.Token);
+                await CheckStream();
             }
         }
 
@@ -45,7 +45,7 @@ namespace ThermalCamera.App.Data
 
         public event EventHandler<OutputEventArgs>? Output;
 
-        protected abstract Task CheckStream(CancellationToken cancellationToken);
+        protected abstract Task CheckStream();
 
         protected void WriteOutput(string output)
         {

@@ -5,7 +5,7 @@ namespace ThermalCamera.App.Data
 {
     public class DeviceStream : BaseDeviceStream
     {
-        protected override Task CheckStream(CancellationToken cancellationToken)
+        protected override Task CheckStream()
         {
             throw new System.NotImplementedException();
         }

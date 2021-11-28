@@ -9,35 +9,39 @@ namespace ThermalCamera.App.Data
     public class DeviceStream : BaseDeviceStream
     {
         private readonly SerialDevice _serialDevice;
-        private readonly DataReader _dataReader;
 
         public DeviceStream(SerialDevice serialDevice)
         {
             _serialDevice = serialDevice;
-            _dataReader = new DataReader(_serialDevice.InputStream);
-            _dataReader.InputStreamOptions = InputStreamOptions.Partial;
+            _serialDevice.ReadTimeout = TimeSpan.FromSeconds(1);
+            _serialDevice.BaudRate = 115200;
         }
 
-        protected override async Task CheckStream(CancellationToken cancellationToken)
+        protected override async Task CheckStream()
         {
             var cts = new CancellationTokenSource();
             cts.CancelAfter(1000);
+            using var dataReader = new DataReader(_serialDevice.InputStream);
             try
             {
-                var inBufferCnt = await _dataReader.LoadAsync(256).AsTask(cts.Token);
-                var runStr = _dataReader.ReadString(inBufferCnt);
+                dataReader.InputStreamOptions = InputStreamOptions.Partial;
+                var inBufferCnt = await dataReader.LoadAsync(1024).AsTask(cts.Token);
+                var runStr = dataReader.ReadString(inBufferCnt);
                 WriteOutput(runStr);
             }
             catch (TaskCanceledException)
             {
                 cts.Dispose();
             }
+            finally
+            {
+                dataReader.DetachStream();
+            }
         }
 
         public override async ValueTask DisposeAsync()
         {
             await base.DisposeAsync();
-            _dataReader.Dispose();
             _serialDevice.Dispose();
         }
     }
