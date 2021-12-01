@@ -35,6 +35,16 @@ else
 		</tbody>
 	</table>
 
+	@if(!string.IsNullOrEmpty(_errorMessage))
+	{
+		<p>ERROR: @_errorMessage</p>
+	}
+
+	@if(!string.IsNullOrEmpty(_statusMessage))
+	{
+		<p>Status: @_statusMessage</p>
+	}
+
 	<pre>@_streamData</pre>
 }
 
@@ -42,7 +52,8 @@ else
 	private List<UsbConnectionData>? _usbConnectionData = new List<UsbConnectionData>();
 	private IDeviceStream? _deviceStream;
 	private string _streamData = string.Empty;
-	private List<string> _streamDataRaw = new List<string>();
+	private string _statusMessage = string.Empty;
+	private string _errorMessage = string.Empty;
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -74,10 +85,71 @@ else
 	{
 		await InvokeAsync(() =>
 		{
-			_streamDataRaw.Add(args.Output);
-			_streamData = string.Join('\n', _streamDataRaw);
+			var splitIndex = args.Output.IndexOf(':');
+			if (splitIndex == -1) {
+				ProcessUnknown("N/A", args.Output);
+				return;
+			}
+			var command = args.Output.Substring(0, splitIndex);
+			string data;
+			if (args.Output.Length > splitIndex + 1)
+			{
+				data = args.Output.Substring(splitIndex + 1);
+			}
+			else
+			{
+				data = string.Empty;
+			}
+			switch (command)
+			{
+				case "data":
+					ProcessData(data);
+					break;
+				case "error":
+					ProcessError(data);
+					break;
+				case "status":
+					ProcessStatus(data);
+					break;
+				default:
+					ProcessUnknown(command, data);
+					break;
+			}
 			StateHasChanged();
 		});
+	}
+
+	private void ProcessData(string data)
+	{
+		try
+		{
+			var array = data.TrimEnd(',').Split(',').Select(x => decimal.Parse(x)).ToArray();
+			if (array.Length != 768)
+			{
+				_errorMessage = $"Array length is different from expected, length: {array.Length}";
+				return;
+			}
+			_streamData = data;
+		}
+		catch (Exception e)
+		{
+			_errorMessage = $"Failed to process data: {e}";
+		}
+	}
+
+	private void ProcessError(string data)
+	{
+		_errorMessage = data;
+	}
+
+	private void ProcessStatus(string data)
+	{
+		_statusMessage = data;
+	}
+
+	private void ProcessUnknown(string command, string data)
+	{
+		_errorMessage = $"Unknown data received: {command} {data}";
 	}
 
 	private async Task Connect(UsbConnectionData data)

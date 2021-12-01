@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ThermalCamera.App.Data.Interfaces;
@@ -8,11 +9,13 @@ namespace ThermalCamera.App.Data
     public abstract class BaseDeviceStream : IDeviceStream
     {
         private readonly CancellationTokenSource _cancellationTokenSource;
+        private string _dataBuffer;
         private Task? _task;
 
         public BaseDeviceStream()
         {
             _cancellationTokenSource = new CancellationTokenSource();
+            _dataBuffer = string.Empty;
         }
 
         public Task Start()
@@ -46,6 +49,17 @@ namespace ThermalCamera.App.Data
         public event EventHandler<OutputEventArgs>? Output;
 
         protected abstract Task CheckStream();
+
+        protected void ProcessData(string data)
+        {
+            _dataBuffer += data;
+            var split = _dataBuffer.Split("\r\n");
+            foreach (var dataSplit in split.SkipLast(1))
+            {
+                WriteOutput(dataSplit);
+            }
+            _dataBuffer = split.Last();
+        }
 
         protected void WriteOutput(string output)
         {

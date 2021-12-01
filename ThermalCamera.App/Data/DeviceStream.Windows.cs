@@ -27,7 +27,7 @@ namespace ThermalCamera.App.Data
                 dataReader.InputStreamOptions = InputStreamOptions.Partial;
                 var inBufferCnt = await dataReader.LoadAsync(1024).AsTask(cts.Token);
                 var runStr = dataReader.ReadString(inBufferCnt);
-                WriteOutput(runStr);
+                ProcessData(runStr);
             }
             catch (TaskCanceledException)
             {
