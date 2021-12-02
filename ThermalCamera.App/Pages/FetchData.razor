@@ -24,7 +24,7 @@ else
 			{
 				<tr>
 					<td>@data.Summary (@data.Id)</td>
-					<td><button @onclick="@(async () => await Connect(data))">Select</button></td>
+					<td><button class="btn btn-primary" @onclick="@(async () => await Connect(data))">Select</button></td>
 				</tr>
 			}
 		</tbody>
@@ -32,7 +32,7 @@ else
 
 	@if(_deviceStream != null)
 	{
-	<button @onclick="@(async () => await RequestStatus())">Request Status</button>
+	<button class="btn btn-primary" @onclick="@(async () => await RequestStatus())">Request Status</button>
 	}
 
 	@if(!string.IsNullOrEmpty(_errorMessage))
