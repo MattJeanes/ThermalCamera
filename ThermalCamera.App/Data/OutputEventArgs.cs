@@ -1,7 +1,6 @@
-﻿namespace ThermalCamera.App.Data
+﻿namespace ThermalCamera.App.Data;
+
+public struct OutputEventArgs
 {
-    public struct OutputEventArgs
-    {
-        public string Output { get; set; }
-    }
+    public string Output { get; set; }
 }

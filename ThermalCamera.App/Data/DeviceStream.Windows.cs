@@ -1,48 +1,69 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Windows.Devices.SerialCommunication;
+﻿using Windows.Devices.SerialCommunication;
 using Windows.Storage.Streams;
 
-namespace ThermalCamera.App.Data
+namespace ThermalCamera.App.Data;
+
+public class DeviceStream : BaseDeviceStream
 {
-    public class DeviceStream : BaseDeviceStream
+    private readonly SerialDevice _serialDevice;
+
+    public DeviceStream(SerialDevice serialDevice)
     {
-        private readonly SerialDevice _serialDevice;
+        _serialDevice = serialDevice;
+        _serialDevice.ReadTimeout = TimeSpan.FromSeconds(1);
+        _serialDevice.WriteTimeout = TimeSpan.FromSeconds(1);
+        _serialDevice.BaudRate = 115200;
+        _serialDevice.Parity = SerialParity.None;
+        _serialDevice.StopBits = SerialStopBitCount.One;
+        _serialDevice.DataBits = 8;
+        _serialDevice.Handshake = SerialHandshake.None;
+    }
 
-        public DeviceStream(SerialDevice serialDevice)
+    protected override async Task CheckStream()
+    {
+        var cts = new CancellationTokenSource();
+        cts.CancelAfter(1000);
+        using var dataReader = new DataReader(_serialDevice.InputStream);
+        try
         {
-            _serialDevice = serialDevice;
-            _serialDevice.ReadTimeout = TimeSpan.FromSeconds(1);
-            _serialDevice.BaudRate = 115200;
+            dataReader.InputStreamOptions = InputStreamOptions.Partial;
+            var inBufferCnt = await dataReader.LoadAsync(256).AsTask(cts.Token);
+            var runStr = dataReader.ReadString(inBufferCnt);
+            ProcessData(runStr);
         }
-
-        protected override async Task CheckStream()
+        catch (TaskCanceledException)
         {
-            var cts = new CancellationTokenSource();
-            cts.CancelAfter(1000);
-            using var dataReader = new DataReader(_serialDevice.InputStream);
-            try
-            {
-                dataReader.InputStreamOptions = InputStreamOptions.Partial;
-                var inBufferCnt = await dataReader.LoadAsync(1024).AsTask(cts.Token);
-                var runStr = dataReader.ReadString(inBufferCnt);
-                ProcessData(runStr);
-            }
-            catch (TaskCanceledException)
-            {
-                cts.Dispose();
-            }
-            finally
-            {
-                dataReader.DetachStream();
-            }
+            cts.Dispose();
         }
-
-        public override async ValueTask DisposeAsync()
+        finally
         {
-            await base.DisposeAsync();
-            _serialDevice.Dispose();
+            dataReader.DetachStream();
+        }
+    }
+
+    public override async ValueTask DisposeAsync()
+    {
+        await base.DisposeAsync();
+        _serialDevice.Dispose();
+    }
+
+    public override async Task SendData(string data)
+    {
+        var cts = new CancellationTokenSource();
+        cts.CancelAfter(1000);
+        using var dataWriter = new DataWriter(_serialDevice.OutputStream);
+        try
+        {
+            dataWriter.WriteString(data);
+            await dataWriter.StoreAsync().AsTask(cts.Token);
+        }
+        catch (TaskCanceledException)
+        {
+            cts.Dispose();
+        }
+        finally
+        {
+            dataWriter.DetachStream();
         }
     }
 }

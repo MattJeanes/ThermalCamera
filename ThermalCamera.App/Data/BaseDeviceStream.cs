@@ -1,69 +1,65 @@
-﻿using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using ThermalCamera.App.Data.Interfaces;
+﻿using ThermalCamera.App.Data.Interfaces;
 
-namespace ThermalCamera.App.Data
+namespace ThermalCamera.App.Data;
+
+public abstract class BaseDeviceStream : IDeviceStream
 {
-    public abstract class BaseDeviceStream : IDeviceStream
+    private readonly CancellationTokenSource _cancellationTokenSource;
+    private string _dataBuffer;
+    private Task? _task;
+
+    public BaseDeviceStream()
     {
-        private readonly CancellationTokenSource _cancellationTokenSource;
-        private string _dataBuffer;
-        private Task? _task;
+        _cancellationTokenSource = new CancellationTokenSource();
+        _dataBuffer = string.Empty;
+    }
 
-        public BaseDeviceStream()
-        {
-            _cancellationTokenSource = new CancellationTokenSource();
-            _dataBuffer = string.Empty;
-        }
+    public Task Start()
+    {
+        _task = Task.Run(BackgroundThread);
+        return Task.CompletedTask;
+    }
 
-        public Task Start()
+    private async Task BackgroundThread()
+    {
+        while (true)
         {
-            _task = Task.Run(BackgroundThread);
-            return Task.CompletedTask;
-        }
-
-        private async Task BackgroundThread()
-        {
-            while (true)
+            if (_cancellationTokenSource.IsCancellationRequested)
             {
-                if (_cancellationTokenSource.IsCancellationRequested)
-                {
-                    break;
-                }
-                await CheckStream();
+                break;
             }
+            await CheckStream();
         }
+    }
 
-        public async virtual ValueTask DisposeAsync()
+    public async virtual ValueTask DisposeAsync()
+    {
+        _cancellationTokenSource.Cancel();
+
+        if (_task != null)
         {
-            _cancellationTokenSource.Cancel();
-
-            if (_task != null)
-            {
-                await _task;
-            }
+            await _task;
         }
+    }
 
-        public event EventHandler<OutputEventArgs>? Output;
+    public event EventHandler<OutputEventArgs>? Output;
 
-        protected abstract Task CheckStream();
+    protected abstract Task CheckStream();
+    public abstract Task SendData(string data);
 
-        protected void ProcessData(string data)
+    protected void ProcessData(string data)
+    {
+        _dataBuffer += data;
+        var split = _dataBuffer.Split('\n');
+        foreach (var dataSplit in split.Skip(1).SkipLast(1))
         {
-            _dataBuffer += data;
-            var split = _dataBuffer.Split("\r\n");
-            foreach (var dataSplit in split.SkipLast(1))
-            {
-                WriteOutput(dataSplit);
-            }
-            _dataBuffer = split.Last();
+            WriteOutput(dataSplit);
         }
+        _dataBuffer = "\n" + split.Last();
+    }
 
-        protected void WriteOutput(string output)
-        {
-            Output?.Invoke(this, new OutputEventArgs { Output = output });
-        }
+    protected void WriteOutput(string output)
+    {
+        Output?.Invoke(this, new OutputEventArgs { Output = output });
     }
 }

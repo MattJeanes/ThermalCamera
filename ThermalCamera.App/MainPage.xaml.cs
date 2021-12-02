@@ -1,13 +1,11 @@
-﻿using System;
-using Microsoft.Maui.Controls;
+﻿using Microsoft.Maui.Controls;
 
-namespace ThermalCamera.App
+namespace ThermalCamera.App;
+
+public partial class MainPage : ContentPage
 {
-	public partial class MainPage : ContentPage
-	{
-		public MainPage()
-		{
-			InitializeComponent();
-		}
-	}
+    public MainPage()
+    {
+        InitializeComponent();
+    }
 }

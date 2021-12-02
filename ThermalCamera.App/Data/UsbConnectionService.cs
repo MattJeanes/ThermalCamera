@@ -1,7 +1,6 @@
-namespace ThermalCamera.App.Data
-{
-    public partial class UsbConnectionService
-    {
+namespace ThermalCamera.App.Data;
 
-    }
+public partial class UsbConnectionService
+{
+
 }

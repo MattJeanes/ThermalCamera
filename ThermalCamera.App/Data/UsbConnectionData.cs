@@ -1,8 +1,7 @@
-namespace ThermalCamera.App.Data
+namespace ThermalCamera.App.Data;
+
+public struct UsbConnectionData
 {
-    public struct UsbConnectionData
-    {
-        public string Id;
-        public string Summary;
-    }
+    public string Id;
+    public string Summary;
 }

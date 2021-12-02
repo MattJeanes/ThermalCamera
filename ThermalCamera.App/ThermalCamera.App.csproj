@@ -11,6 +11,7 @@
 		<EnableDefaultCssItems>false</EnableDefaultCssItems>
 		<LangVersion>latest</LangVersion>
 		<Nullable>enable</Nullable>
+		<ImplicitUsings>true</ImplicitUsings>
 
 		<!-- Display name -->
 		<ApplicationTitle>ThermalCamera.App</ApplicationTitle>

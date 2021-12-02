@@ -1,13 +1,14 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿namespace ThermalCamera.App.Data;
 
-namespace ThermalCamera.App.Data
+public class DeviceStream : BaseDeviceStream
 {
-    public class DeviceStream : BaseDeviceStream
+    public override Task SendData(string data)
     {
-        protected override Task CheckStream()
-        {
-            throw new System.NotImplementedException();
-        }
+        throw new NotImplementedException();
+    }
+
+    protected override Task CheckStream()
+    {
+        throw new NotImplementedException();
     }
 }
