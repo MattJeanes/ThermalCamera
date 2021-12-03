@@ -1,5 +1,6 @@
 ﻿@page "/fetchdata"
 
+@using Excubo.Blazor.Canvas;
 <h1>USB Connection Service</h1>
 
 <p>This table shows all connected USB devices.</p>
@@ -30,9 +31,13 @@ else
 		</tbody>
 	</table>
 
+	<Canvas @ref="_canvas" width="@((SENSOR_WIDTH * CANVAS_SCALE) + "px")" height="@((SENSOR_HEIGHT * CANVAS_SCALE) + "px")" />
+
 	@if(_deviceStream != null)
 	{
-	<button class="btn btn-primary" @onclick="@(async () => await RequestStatus())">Request Status</button>
+	<p>
+		<button class="btn btn-primary" @onclick="@(async () => await RequestStatus())">Request Status</button>
+	</p>
 	}
 
 	@if(!string.IsNullOrEmpty(_errorMessage))
