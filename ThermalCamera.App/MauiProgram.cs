@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Maui.Controls.Hosting;
 using Microsoft.Maui.Hosting;
 using ThermalCamera.App.Data;
+using ThermalCamera.App.Data.Interfaces;
 
 namespace ThermalCamera.App;
 
@@ -20,7 +21,7 @@ public static class MauiProgram
             });
 
         builder.Services.AddBlazorWebView();
-        builder.Services.AddSingleton<UsbConnectionService>();
+        builder.Services.AddSingleton<IUsbConnectionService, UsbConnectionService>();
 
         return builder.Build();
     }

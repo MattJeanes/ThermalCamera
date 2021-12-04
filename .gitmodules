@@ -1,0 +1,3 @@
+[submodule "UsbSerialForAndroid"]
+	path = UsbSerialForAndroid
+	url = https://github.com/MattJeanes/UsbSerialForAndroid

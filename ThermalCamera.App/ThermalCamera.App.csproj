@@ -50,6 +50,10 @@
 		<PackageReference Include="Microsoft.Graphics.Win2D" Version="1.0.0.29-preview3" />
 	</ItemGroup>
 
+	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0-android'">
+		<ProjectReference Include="../UsbSerialForAndroid/UsbSerialForAndroid/UsbSerialForAndroid.csproj" />
+	</ItemGroup>
+
 	<ItemGroup>
 		<PackageReference Include="Excubo.Blazor.Canvas" Version="3.0.4" />
 	</ItemGroup>
@@ -71,6 +75,10 @@
 	<ItemGroup Condition="$(TargetFramework.Contains('-windows')) != true">
 		<Compile Remove="**\**\*.Windows.cs" />
 		<None Include="**\**\*.Windows.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Platforms\Android\Resources\values\device_filter.xml" />
 	</ItemGroup>
 
 </Project>

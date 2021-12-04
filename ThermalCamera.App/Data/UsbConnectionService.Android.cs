@@ -1,30 +1,32 @@
 using Android.Content;
 using Android.Hardware.Usb;
+using Hoho.Android.UsbSerial.Driver;
+using Hoho.Android.UsbSerial.Extensions;
+using Hoho.Android.UsbSerial.Util;
 using ThermalCamera.App.Data.Interfaces;
 
 namespace ThermalCamera.App.Data;
 
-public partial class UsbConnectionService
+public partial class UsbConnectionService : BaseUsbConnectionService
 {
-    public Task<List<UsbConnectionData>> GetData()
+    private readonly UsbManager _usbManager;
+    private readonly UsbSerialProber _prober;
+
+    public UsbConnectionService()
     {
-        var usbService = Android.App.Application.Context.GetSystemService(Context.UsbService) as UsbManager;
-        if (usbService == null)
+        var usbManager = Application.Context.GetSystemService(Context.UsbService) as UsbManager;
+        if (usbManager == null) { throw new Exception("Failed to get UsbManager"); }
+        _usbManager = usbManager;
+        _prober = UsbSerialProber.GetDefaultProber();
+    }
+
+    public override async Task<List<UsbConnectionData>> GetData()
+    {
+        var drivers = await _prober.FindAllDriversAsync(_usbManager);
+        var usbConnectionData = drivers.Select(x => new UsbConnectionData
         {
-            return Task.FromResult(new List<UsbConnectionData>
-                {
-                    new UsbConnectionData
-                    {
-                        Id = "N/A",
-                        Summary = "Unable to access USB service"
-                    }
-                });
-        }
-        var accessories = usbService.GetAccessoryList();
-        var usbConnectionData = accessories?.Where(x => !string.IsNullOrEmpty(x.Serial) && !string.IsNullOrEmpty(x.Description)).Select(x => new UsbConnectionData
-        {
-            Id = x.Serial!,
-            Summary = x.Description!
+            Id = x.Device.DeviceId.ToString(),
+            Summary = x.Device.DeviceName
         }).ToList() ?? new List<UsbConnectionData>();
 
         if (usbConnectionData.Count == 0)
@@ -36,18 +38,22 @@ public partial class UsbConnectionService
             });
         }
 
-        return Task.FromResult(usbConnectionData);
+        return usbConnectionData;
     }
 
-    public Task<IDeviceStream> Connect(UsbConnectionData data)
+    public override async Task<DataResult<IDeviceStream>> Connect(UsbConnectionData data)
     {
-        return Task.FromResult((IDeviceStream)new DeviceStream());
-        // placeholder
-    }
-
-    public IDeviceStream? GetStream()
-    {
-        return null;
-        // placeholder
+        var drivers = await _prober.FindAllDriversAsync(_usbManager);
+        var driver = drivers.FirstOrDefault(x => x.Device.DeviceId.ToString() == data.Id);
+        if (driver == null)
+        {
+            return DataResult.GetFailure<IDeviceStream>("Failed to find device");
+        }
+        var permissionGranted = await _usbManager.RequestPermissionAsync(driver.Device, Application.Context);
+        if (!permissionGranted)
+        {
+            return DataResult.GetFailure<IDeviceStream>("Permission not granted to access device");
+        }
+        return DataResult.GetSuccess((IDeviceStream)new DeviceStream(driver));
     }
 }

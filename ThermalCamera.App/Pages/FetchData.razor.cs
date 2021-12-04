@@ -8,7 +8,7 @@ namespace ThermalCamera.App.Pages;
 public partial class FetchData
 {
     [Inject]
-    private UsbConnectionService UsbConnectionService { get; set; } = default!;
+    private IUsbConnectionService UsbConnectionService { get; set; } = default!;
 
     private const int SENSOR_WIDTH = 32;
     private const int SENSOR_HEIGHT = 24;
@@ -124,7 +124,7 @@ public partial class FetchData
             await batch.FillAndStrokeStyles.FillStyleAsync($"rgb({tempRGB},{tempRGB},{tempRGB})");
             await batch.FillRectAsync(column * CANVAS_SCALE, row * CANVAS_SCALE, CANVAS_SCALE, CANVAS_SCALE);
         }
-        var midTemp = _temperatureData[((SENSOR_HEIGHT/2) * SENSOR_WIDTH) + (SENSOR_WIDTH / 2)];
+        var midTemp = _temperatureData[((SENSOR_HEIGHT / 2) * SENSOR_WIDTH) + (SENSOR_WIDTH / 2)];
         await batch.FontAsync("20px serif");
         await batch.FillAndStrokeStyles.FillStyleAsync("#ff0000");
         await batch.FillTextAsync(midTemp + "°C", (SENSOR_WIDTH * CANVAS_SCALE) / 2, (SENSOR_HEIGHT * CANVAS_SCALE) / 2);
@@ -158,8 +158,15 @@ public partial class FetchData
             _deviceStream = null;
         }
         _deviceStream = null;
-        var deviceStream = await UsbConnectionService.Connect(data);
-        HandleStream(deviceStream);
+        var deviceStreamResult = await UsbConnectionService.Connect(data);
+        if (deviceStreamResult.Success)
+        {
+            HandleStream(deviceStreamResult.Result);
+        }
+        else
+        {
+            _errorMessage = deviceStreamResult.ErrorMessage;
+        }
     }
 
     private async Task RequestStatus()
