@@ -8,6 +8,7 @@ namespace ThermalCamera.App.Data;
 
 public class DeviceStream : BaseDeviceStream
 {
+    private readonly UsbManager _usbManager;
     private readonly SerialInputOutputManager _serialIOManager;
     private readonly UsbSerialPort _port;
     const int WRITE_WAIT_MILLIS = 200;
@@ -16,6 +17,7 @@ public class DeviceStream : BaseDeviceStream
     {
         var usbManager = Application.Context.GetSystemService(Context.UsbService) as UsbManager;
         if (usbManager == null) { throw new Exception("Failed to get UsbManager"); }
+        _usbManager = usbManager;
         _port = usbSerialDriver.Ports.First();
         _serialIOManager = new SerialInputOutputManager(_port)
         {
@@ -33,7 +35,12 @@ public class DeviceStream : BaseDeviceStream
         {
             WriteOutput($"error:Error in serial connection: {e.ToString}");
         };
-        _serialIOManager.Open(usbManager);
+    }
+
+    public override Task Start()
+    {
+        _serialIOManager.Open(_usbManager);
+        return Task.CompletedTask;
     }
 
     public override Task SendData(string data)
@@ -46,9 +53,9 @@ public class DeviceStream : BaseDeviceStream
         return Task.CompletedTask;
     }
 
-    protected override Task CheckStream()
+    public override async ValueTask DisposeAsync()
     {
-        // todo
-        return Task.CompletedTask;
+        await base.DisposeAsync();
+        _serialIOManager.Dispose();
     }
 }

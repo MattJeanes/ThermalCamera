@@ -54,6 +54,8 @@ public partial class UsbConnectionService : BaseUsbConnectionService
         {
             return DataResult.GetFailure<IDeviceStream>("Permission not granted to access device");
         }
-        return DataResult.GetSuccess((IDeviceStream)new DeviceStream(driver));
+        _deviceStream = new DeviceStream(driver);
+        await _deviceStream.Start();
+        return DataResult.GetSuccess(_deviceStream);
     }
 }

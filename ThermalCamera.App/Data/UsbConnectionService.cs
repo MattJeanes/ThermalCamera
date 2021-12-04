@@ -4,7 +4,7 @@ namespace ThermalCamera.App.Data;
 
 public abstract class BaseUsbConnectionService : IUsbConnectionService
 {
-    protected DeviceStream? _deviceStream;
+    protected IDeviceStream? _deviceStream;
 
     public abstract Task<DataResult<IDeviceStream>> Connect(UsbConnectionData data);
     public abstract Task<List<UsbConnectionData>> GetData();

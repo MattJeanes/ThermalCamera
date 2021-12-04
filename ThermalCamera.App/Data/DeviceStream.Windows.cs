@@ -6,6 +6,7 @@ namespace ThermalCamera.App.Data;
 public class DeviceStream : BaseDeviceStream
 {
     private readonly SerialDevice _serialDevice;
+    private Task? _task;
 
     public DeviceStream(SerialDevice serialDevice)
     {
@@ -19,7 +20,25 @@ public class DeviceStream : BaseDeviceStream
         _serialDevice.Handshake = SerialHandshake.None;
     }
 
-    protected override async Task CheckStream()
+    public override Task Start()
+    {
+        _task = Task.Run(BackgroundThread);
+        return Task.CompletedTask;
+    }
+
+    private async Task BackgroundThread()
+    {
+        while (true)
+        {
+            if (CancellationToken.IsCancellationRequested)
+            {
+                break;
+            }
+            await CheckStream();
+        }
+    }
+
+    private async Task CheckStream()
     {
         var cts = new CancellationTokenSource();
         cts.CancelAfter(1000);
@@ -44,6 +63,10 @@ public class DeviceStream : BaseDeviceStream
     public override async ValueTask DisposeAsync()
     {
         await base.DisposeAsync();
+        if (_task != null)
+        {
+            await _task;
+        }
         _serialDevice.Dispose();
     }
 

@@ -31,6 +31,6 @@ public partial class UsbConnectionService : BaseUsbConnectionService
         _serialDevice = await SerialDevice.FromIdAsync(data.Id);
         _deviceStream = new DeviceStream(_serialDevice);
         await _deviceStream.Start();
-        return DataResult.GetSuccess((IDeviceStream)_deviceStream);
+        return DataResult.GetSuccess(_deviceStream);
     }
 }

@@ -6,7 +6,6 @@ public abstract class BaseDeviceStream : IDeviceStream
 {
     private readonly CancellationTokenSource _cancellationTokenSource;
     private string _dataBuffer;
-    private Task? _task;
 
     public BaseDeviceStream()
     {
@@ -14,37 +13,18 @@ public abstract class BaseDeviceStream : IDeviceStream
         _dataBuffer = string.Empty;
     }
 
-    public Task Start()
-    {
-        _task = Task.Run(BackgroundThread);
-        return Task.CompletedTask;
-    }
+    protected CancellationToken CancellationToken => _cancellationTokenSource.Token;
 
-    private async Task BackgroundThread()
-    {
-        while (true)
-        {
-            if (_cancellationTokenSource.IsCancellationRequested)
-            {
-                break;
-            }
-            await CheckStream();
-        }
-    }
+    public abstract Task Start();
 
-    public async virtual ValueTask DisposeAsync()
+    public virtual ValueTask DisposeAsync()
     {
         _cancellationTokenSource.Cancel();
-
-        if (_task != null)
-        {
-            await _task;
-        }
+        return ValueTask.CompletedTask;
     }
 
     public event EventHandler<OutputEventArgs>? Output;
 
-    protected abstract Task CheckStream();
     public abstract Task SendData(string data);
 
     protected void ProcessData(string data)
