@@ -6,7 +6,7 @@ namespace ThermalCamera.App.Data;
 public class DeviceStream : BaseDeviceStream
 {
     private readonly SerialDevice _serialDevice;
-    private Task? _task;
+    private Task _task;
 
     public DeviceStream(SerialDevice serialDevice)
     {

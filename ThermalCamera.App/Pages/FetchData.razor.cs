@@ -15,10 +15,10 @@ public partial class FetchData
     private const int CANVAS_SCALE = 16;
 
 
-    private List<UsbConnectionData>? _usbConnectionData = new List<UsbConnectionData>();
-    private IDeviceStream? _deviceStream;
+    private List<UsbConnectionData> _usbConnectionData = new List<UsbConnectionData>();
+    private IDeviceStream _deviceStream;
     private string _streamData = string.Empty;
-    private decimal[]? _temperatureData;
+    private decimal[] _temperatureData;
     private string _statusMessage = string.Empty;
     private string _errorMessage = string.Empty;
     private Canvas _canvas = default!;
@@ -49,7 +49,7 @@ public partial class FetchData
         _deviceStream.Output += HandleOutputEvent;
     }
 
-    private async void HandleOutputEvent(object? sender, OutputEventArgs args)
+    private async void HandleOutputEvent(object sender, OutputEventArgs args)
     {
         await InvokeAsync(async () =>
         {

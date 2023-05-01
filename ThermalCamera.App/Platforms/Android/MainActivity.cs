@@ -1,6 +1,6 @@
-﻿using Android.Content.PM;
+﻿using Android.App;
+using Android.Content.PM;
 using Android.Hardware.Usb;
-using Microsoft.Maui;
 
 [assembly: UsesFeature("android.hardware.usb.host")]
 namespace ThermalCamera.App;

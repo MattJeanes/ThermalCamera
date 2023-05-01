@@ -4,5 +4,5 @@ public interface IDeviceStream : IAsyncDisposable
 {
     Task Start();
     Task SendData(string data);
-    public event EventHandler<OutputEventArgs>? Output;
+    public event EventHandler<OutputEventArgs> Output;
 }

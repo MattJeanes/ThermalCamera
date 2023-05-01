@@ -3,7 +3,7 @@
 public class DataResult
 {
     protected bool _success;
-    protected string? _errorMessage;
+    protected string _errorMessage;
 
     public DataResult()
     {
@@ -42,7 +42,7 @@ public class DataResult
 
 public class DataResult<T> : DataResult
 {
-    protected T? _result;
+    protected T _result;
 
     public T Result => _success ? _result! : throw new InvalidOperationException();
 

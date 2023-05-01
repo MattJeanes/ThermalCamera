@@ -23,7 +23,7 @@ public abstract class BaseDeviceStream : IDeviceStream
         return ValueTask.CompletedTask;
     }
 
-    public event EventHandler<OutputEventArgs>? Output;
+    public event EventHandler<OutputEventArgs> Output;
 
     public abstract Task SendData(string data);
 

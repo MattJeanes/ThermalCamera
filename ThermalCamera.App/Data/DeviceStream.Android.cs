@@ -3,6 +3,7 @@ using Android.Hardware.Usb;
 using Hoho.Android.UsbSerial.Driver;
 using Hoho.Android.UsbSerial.Extensions;
 using System.Text;
+using Application = Android.App.Application;
 
 namespace ThermalCamera.App.Data;
 

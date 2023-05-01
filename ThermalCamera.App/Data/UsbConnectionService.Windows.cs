@@ -6,7 +6,7 @@ namespace ThermalCamera.App.Data;
 
 public partial class UsbConnectionService : BaseUsbConnectionService
 {
-    private SerialDevice? _serialDevice;
+    private SerialDevice _serialDevice;
 
     public override async Task<List<UsbConnectionData>> GetData()
     {

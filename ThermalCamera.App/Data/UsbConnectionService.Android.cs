@@ -4,6 +4,7 @@ using Hoho.Android.UsbSerial.Driver;
 using Hoho.Android.UsbSerial.Extensions;
 using Hoho.Android.UsbSerial.Util;
 using ThermalCamera.App.Data.Interfaces;
+using Application = Android.App.Application;
 
 namespace ThermalCamera.App.Data;
 
