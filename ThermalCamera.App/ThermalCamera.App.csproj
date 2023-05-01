@@ -45,6 +45,18 @@
     </ItemGroup>
 
     <ItemGroup>
+      <MauiAsset Remove="Resources\Raw\DeviceFilter.xml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Resources\Raw\DeviceFilter.xml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <AndroidResource Include="Resources\xml\device_filter.xml" />
+    </ItemGroup>
+
+    <ItemGroup>
         <PackageReference Include="Excubo.Blazor.Canvas" Version="3.2.20" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
     </ItemGroup>
