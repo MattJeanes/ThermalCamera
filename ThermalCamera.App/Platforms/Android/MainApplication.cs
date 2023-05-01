@@ -2,7 +2,6 @@
 using Android.Runtime;
 
 namespace ThermalCamera.App;
-
 [Application]
 public class MainApplication : MauiApplication
 {

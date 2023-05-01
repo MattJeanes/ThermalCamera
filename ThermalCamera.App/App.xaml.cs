@@ -1,6 +1,4 @@
-﻿using Application = Microsoft.Maui.Controls.Application;
-
-namespace ThermalCamera.App;
+﻿namespace ThermalCamera.App;
 
 public partial class App : Application
 {

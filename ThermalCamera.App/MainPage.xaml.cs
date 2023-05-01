@@ -1,6 +1,4 @@
-﻿using Microsoft.Maui.Controls;
-
-namespace ThermalCamera.App;
+﻿namespace ThermalCamera.App;
 
 public partial class MainPage : ContentPage
 {

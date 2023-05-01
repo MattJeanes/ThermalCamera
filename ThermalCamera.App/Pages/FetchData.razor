@@ -33,19 +33,19 @@ else
 
 	<Canvas @ref="_canvas" width="@((SENSOR_WIDTH * CANVAS_SCALE) + "px")" height="@((SENSOR_HEIGHT * CANVAS_SCALE) + "px")" />
 
-	@if(_deviceStream != null)
+	@if (_deviceStream != null)
 	{
-	<p>
-		<button class="btn btn-primary" @onclick="@(async () => await RequestStatus())">Request Status</button>
-	</p>
+		<p>
+			<button class="btn btn-primary" @onclick="@(async () => await RequestStatus())">Request Status</button>
+		</p>
 	}
 
-	@if(!string.IsNullOrEmpty(_errorMessage))
+	@if (!string.IsNullOrEmpty(_errorMessage))
 	{
 		<p>ERROR: @_errorMessage</p>
 	}
 
-	@if(!string.IsNullOrEmpty(_statusMessage))
+	@if (!string.IsNullOrEmpty(_statusMessage))
 	{
 		<p>Status: @_statusMessage</p>
 	}
