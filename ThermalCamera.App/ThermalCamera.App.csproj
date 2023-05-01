@@ -24,12 +24,9 @@
 
 		<!-- Required for C# Hot Reload -->
 		<UseInterpreter Condition="'$(Configuration)' == 'Debug'">True</UseInterpreter>
-
-		<SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net7.0-android'">33.0</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="$(TargetFramework.Contains('-windows'))">10.0.17763.0</SupportedOSPlatformVersion>
-		<TargetPlatformMinVersion Condition="$(TargetFramework.Contains('-windows'))">10.0.17763.0</TargetPlatformMinVersion>
-		<PlatformTarget>x64</PlatformTarget>
+		
 		<Platforms>x64</Platforms>
+		<PlatformTarget>x64</PlatformTarget>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -46,7 +43,7 @@
 		<MauiFont Include="Resources\Fonts\*" />
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)' == 'net7.0-android'">
+	<ItemGroup Condition="$(TargetFramework.Contains('android'))">
 		<ProjectReference Include="../UsbSerialForAndroid/UsbSerialForAndroid/UsbSerialForAndroid.csproj" />
 	</ItemGroup>
 
@@ -71,10 +68,6 @@
 	<ItemGroup Condition="$(TargetFramework.Contains('-windows')) != true">
 		<Compile Remove="**\**\*.Windows.cs" />
 		<None Include="**\**\*.Windows.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <ProjectReference Include="..\UsbSerialForAndroid\UsbSerialForAndroid\UsbSerialForAndroid.csproj" />
 	</ItemGroup>
 
 </Project>

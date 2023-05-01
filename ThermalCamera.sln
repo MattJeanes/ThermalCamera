@@ -9,7 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UsbSerialForAndroid", "UsbSerialForAndroid\UsbSerialForAndroid\UsbSerialForAndroid.csproj", "{A64567BC-548A-4CB7-9F2C-ECE75EE1A868}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UsbSerialForAndroid", "UsbSerialForAndroid\UsbSerialForAndroid\UsbSerialForAndroid.csproj", "{A64567BC-548A-4CB7-9F2C-ECE75EE1A868}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,9 +21,12 @@ Global
 		{34A86E2B-1CD8-466F-BE1E-D836A75CB522}.Debug|x64.Build.0 = Debug|x64
 		{34A86E2B-1CD8-466F-BE1E-D836A75CB522}.Debug|x64.Deploy.0 = Debug|x64
 		{34A86E2B-1CD8-466F-BE1E-D836A75CB522}.Release|x64.ActiveCfg = Release|x64
-		{A64567BC-548A-4CB7-9F2C-ECE75EE1A868}.Debug|x64.ActiveCfg = Debug|x64
-		{A64567BC-548A-4CB7-9F2C-ECE75EE1A868}.Debug|x64.Build.0 = Debug|x64
-		{A64567BC-548A-4CB7-9F2C-ECE75EE1A868}.Release|x64.ActiveCfg = Release|x64
+		{34A86E2B-1CD8-466F-BE1E-D836A75CB522}.Release|x64.Build.0 = Release|x64
+		{34A86E2B-1CD8-466F-BE1E-D836A75CB522}.Release|x64.Deploy.0 = Release|x64
+		{A64567BC-548A-4CB7-9F2C-ECE75EE1A868}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A64567BC-548A-4CB7-9F2C-ECE75EE1A868}.Debug|x64.Build.0 = Debug|Any CPU
+		{A64567BC-548A-4CB7-9F2C-ECE75EE1A868}.Release|x64.ActiveCfg = Release|Any CPU
+		{A64567BC-548A-4CB7-9F2C-ECE75EE1A868}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
