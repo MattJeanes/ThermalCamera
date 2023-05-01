@@ -15,7 +15,7 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
             });
 
-        builder.Services.AddBlazorWebView();
+        builder.Services.AddMauiBlazorWebView();
         builder.Services.AddSingleton<IUsbConnectionService, UsbConnectionService>();
 
         return builder.Build();
